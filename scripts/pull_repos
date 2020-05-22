@@ -13,4 +13,7 @@ git pull
 cd /scratch1/liam.bindle/sg-TROPOMI/mapping
 git pull
 
+cd /scratch1/liam.bindle/sg-TROPOMI/GOOD_RUNS
+git pull
+
 cd $cwd
