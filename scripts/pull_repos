@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+set -x
+
+cwd=$(pwd)
+
+cd /scratch1/liam.bindle/sg-TROPOMI/TROPOMI_data/tessellate
+git pull
+
+cd /scratch1/liam.bindle/sg-ensemble-2/sg-restart-regridder/
+git pull
+
+cd /scratch1/liam.bindle/sg-TROPOMI/mapping
+git pull
+
+cd $cwd

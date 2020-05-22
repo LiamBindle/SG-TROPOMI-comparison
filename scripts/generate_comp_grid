@@ -1,0 +1,6 @@
+#!/bin/bash
+
+source /opt/conda/bin/activate py36
+export PYTHONPATH=/scratch1/liam.bindle/sg-ensemble-2/sg-restart-regridder/:/scratch1/gcpy
+
+python -m sg.comparison_grid --dx 4e3 --dy 4e3

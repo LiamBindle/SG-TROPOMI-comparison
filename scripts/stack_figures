@@ -1,0 +1,13 @@
+#!/bin/bash
+
+montage -geometry +1+1 -tile 2x1 NO2_CA_abs_TROPOMI.png NO2_CA_abs_GCHP.png tmp.1.png
+convert tmp.1.png NO2_CA_abs_cbar.png -gravity South -append CA.png
+convert NO2_US_abs_TROPOMI.png NO2_US_abs_GCHP.png NO2_US_abs_cbar.png -gravity South -append US.png
+
+convert NO2_rdiff.png NO2_rdiff_cbar.png -gravity South -append tmp.1.png
+convert NO2_adiff.png NO2_adiff_cbar.png -gravity South -append tmp.2.png
+montage -geometry +1+1 -tile 2x1 tmp.1.png tmp.2.png diffs.png
+
+convert NO2_CA_rdiff.png NO2_CA_rdiff_cbar.png -gravity South -append tmp.1.png
+convert NO2_CA_adiff.png NO2_CA_adiff_cbar.png -gravity South -append tmp.2.png
+montage -geometry +1+1 -tile 2x1 tmp.1.png tmp.2.png CA_diffs.png
