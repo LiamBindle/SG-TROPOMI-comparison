@@ -1,0 +1,19 @@
+#!/bin/bash
+#BSUB -q {{ job['queue'] }}
+#BSUB -n 16
+#BSUB -W 6:00
+#BSUB -R "rusage[mem=20000] span[hosts=1]"
+#BSUB -a 'docker(liambindle/my-python-environment:2020-04)'
+#BSUB -J "IWA"
+#BSUB -g /$USER/E2
+#BSUB -o lsf-iwa-%J-output.txt
+
+source /opt/conda/bin/activate py36
+
+set -x                           # Print executed commands
+set -e                           # Exit immediately if a command fails
+
+# Execute simulation
+export PYTHONPATH=/scratch1/liam.bindle/sg-ensemble-2/sg-restart-regridder/:/scratch1/gcpy
+cd {{ paths['run_directory'] }}
+python -m sg.sparse_intersect_matrix -c /scratch1/liam.bindle/sg-ensemble-2/control -e .
