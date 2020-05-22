@@ -4,7 +4,7 @@ source /opt/conda/bin/activate py37
 export PYTHONPATH=/scratch1/liam.bindle/sg-TROPOMI/TROPOMI_data/tessellate
 
 TROPOMI_TESSELATION_ARGS="--grid_in_cxy LON_CENTER,LAT_CENTER --grid_in_xy LON_CORNERS,LAT_CORNERS --grid_out comparison_grid.nc --grid_out_cxy grid_boxes_centers --grid_out_xy grid_boxes --extent -128 -65 23 50"
-GCHP_TESSELATION_ARGS="--grid_out_cxy grid_boxes_centers --grid_out_xy grid_boxes --grid_out comparison_grid.nc --grid_out_cxy grid_boxes_centers --grid_out_xy grid_boxes --extent -128 -65 23 50"
+GCHP_TESSELATION_ARGS="--grid_in_cxy grid_boxes_centers --grid_in_xy grid_boxes --grid_out comparison_grid.nc --grid_out_cxy grid_boxes_centers --grid_out_xy grid_boxes --extent -128 -65 23 50"
 TROPOMI_SAMPLE=/scratch1/liam.bindle/sg-TROPOMI/GOOD_RUNS/tropomi_sample_data
 
 eval python -m tessellate.generate --grid_in ${TROPOMI_SAMPLE}/updated_NEI11_hourly_20180701.nc ${TROPOMI_TESSELATION_ARGS} -o TROPOMI.tessellation.20180701.nc &> 1.txt &
@@ -24,6 +24,7 @@ eval python -m tessellate.generate --grid_in ${TROPOMI_SAMPLE}/updated_NEI11_hou
 eval python -m tessellate.generate --grid_in ${TROPOMI_SAMPLE}/updated_NEI11_hourly_20180715.nc ${TROPOMI_TESSELATION_ARGS} -o TROPOMI.tessellation.20180715.nc &> 15.txt &
 eval python -m tessellate.generate --grid_in ${TROPOMI_SAMPLE}/updated_NEI11_hourly_20180716.nc ${TROPOMI_TESSELATION_ARGS} -o TROPOMI.tessellation.20180716.nc &> 16.txt &
 eval python -m tessellate.generate --grid_in ${TROPOMI_SAMPLE}/updated_NEI11_hourly_20180717.nc ${TROPOMI_TESSELATION_ARGS} -o TROPOMI.tessellation.20180717.nc &> 17.txt &
+wait
 eval python -m tessellate.generate --grid_in ${TROPOMI_SAMPLE}/updated_NEI11_hourly_20180718.nc ${TROPOMI_TESSELATION_ARGS} -o TROPOMI.tessellation.20180718.nc &> 18.txt &
 eval python -m tessellate.generate --grid_in ${TROPOMI_SAMPLE}/updated_NEI11_hourly_20180719.nc ${TROPOMI_TESSELATION_ARGS} -o TROPOMI.tessellation.20180719.nc &> 19.txt &
 eval python -m tessellate.generate --grid_in ${TROPOMI_SAMPLE}/updated_NEI11_hourly_20180720.nc ${TROPOMI_TESSELATION_ARGS} -o TROPOMI.tessellation.20180720.nc &> 20.txt &
@@ -38,3 +39,8 @@ eval python -m tessellate.generate --grid_in ${TROPOMI_SAMPLE}/updated_NEI11_hou
 eval python -m tessellate.generate --grid_in ${TROPOMI_SAMPLE}/updated_NEI11_hourly_20180729.nc ${TROPOMI_TESSELATION_ARGS} -o TROPOMI.tessellation.20180729.nc &> 29.txt &
 eval python -m tessellate.generate --grid_in ${TROPOMI_SAMPLE}/updated_NEI11_hourly_20180730.nc ${TROPOMI_TESSELATION_ARGS} -o TROPOMI.tessellation.20180730.nc &> 30.txt &
 eval python -m tessellate.generate --grid_in ${TROPOMI_SAMPLE}/updated_NEI11_hourly_20180731.nc ${TROPOMI_TESSELATION_ARGS} -o TROPOMI.tessellation.20180731.nc &> 31.txt &
+
+eval python -m tessellate.generate --grid_in C180_global.nc ${GCHP_TESSELATION_ARGS} -o C180_global.tessellation.20180731.nc &> 32.txt &
+eval python -m tessellate.generate --grid_in C180e_NA.nc ${GCHP_TESSELATION_ARGS} -o C180e_NA.tessellation.20180731.nc &> 33.txt &
+eval python -m tessellate.generate --grid_in C720e_CA.nc ${GCHP_TESSELATION_ARGS} -o C720e_CA.tessellation.20180731.nc &> 34.txt &
+wait
