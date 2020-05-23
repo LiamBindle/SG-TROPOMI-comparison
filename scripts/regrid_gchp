@@ -1,0 +1,35 @@
+#!/bin/bash
+
+DATES=(20180701 20180702 20180703 20180704 20180705 20180706 20180707 20180708 20180709 20180710 20180711 20180712 20180713 20180714 20180715 20180716 20180717 20180718 20180719 20180720 20180721 20180722 20180723 20180724 20180725 20180726 20180727 20180728 20180729 20180730 20180731)
+
+source /opt/conda/bin/activate py36
+export PYTHONPATH=/scratch1/liam.bindle/sg-ensemble-2/sg-restart-regridder/:/scratch1/gcpy
+
+for date in ${DATES[@]}; do
+    eval python -m sg.tropospheric_column --species GCHP.TROPOMI_Species.OVERPASS.${date}_1330z.nc4 --metc GCHP.TROPOMI_MetC.OVERPASS.${date}_1330z.nc4 --mete GCHP.TROPOMI_MetE.OVERPASS.${date}_1330z.nc4
+done
+
+source /opt/conda/bin/activate py37
+export PYTHONPATH=/scratch1/liam.bindle/sg-TROPOMI/TROPOMI_data/tessellate
+
+GRID_FILE=$1
+
+TESSELLATIONS_PATH=/scratch1/liam.bindle/sg-TROPOMI/GOOD_RUNS/tesselations
+
+DROP_VARS="lats lons"
+
+for date in ${DATES[@]}; do
+    eval python -m tessellate.compute --grid_in $TESSELLATIONS_PATH/${GRID_FILE}.nc --input GCHP.Tropospheric_NO2_Column.${date}.nc --grid_in_cxy grid_boxes_centers --grid_out $TESSELLATIONS_PATH/comparison_grid.nc --grid_out_cxy grid_boxes_centers --matrix $TESSELLATIONS_PATH/${GRID_FILE}.tessellation.npz --drop $DROP_VARS -o GCHP_NO2_columns.${date}.nc
+done
+
+
+source /opt/conda/bin/activate py36
+export PYTHONPATH=/scratch1/liam.bindle/sg-ensemble-2/sg-restart-regridder/:/scratch1/gcpy
+
+for date in ${DATES[@]}; do
+    eval python -m sg.mask_gchp_where_tropomi_is_nan --gchp_data . --daily_tropomi TROPOMI_NO2.${date}.nc
+done
+
+
+python -m sg.nanaverage GCHP_NO2_201807* --weekly --dim time -o GCHP_NO2_July2018_weekly.nc
+python -m sg.nanaverage GCHP_NO2_201807* --dim time -o GCHP_NO2_July2018.nc
