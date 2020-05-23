@@ -15,5 +15,5 @@ done
 source /opt/conda/bin/activate py36
 export PYTHONPATH=/scratch1/liam.bindle/sg-ensemble-2/sg-restart-regridder/:/scratch1/gcpy
 
-python -m sg.nanaverage GCHP_NO2_201807* --weekly --dim time -o GCHP_NO2_July2018_weekly.nc
-python -m sg.nanaverage GCHP_NO2_201807* --dim time -o GCHP_NO2_July2018.nc
+python -m sg.nanaverage TROPOMI_NO2.201807* --weekly --dim time -o TROPOMI_NO2_July2018_weekly.nc
+python -m sg.nanaverage TROPOMI_NO2.201807* --dim time -o TROPOMI_NO2_July2018.nc
