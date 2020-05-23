@@ -1,0 +1,41 @@
+#!/bin/bash
+
+GRID_FILE=comparison_grid
+TESSELLATIONS_PATH=/scratch1/liam.bindle/sg-TROPOMI/GOOD_RUNS/tesselations
+
+source /opt/conda/bin/activate py37
+export PYTHONPATH=/scratch1/liam.bindle/sg-TROPOMI/mapping
+# Figures
+mkdir -p figures
+cd figures
+python -m maps.nice_map ../GCHP_NO2_July2018.nc -v GCHP_NO2 --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region US --shapefiles /scratch1/Shared/Shapefiles -n 0.5e15 2.5e15 --name "GCHP" -o NO2_US_abs_GCHP.png
+python -m maps.nice_map ../TROPOMI_NO2_July2018.nc -v TROPOMI_NO2_molec_per_cm2 --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region US --shapefiles /scratch1/Shared/Shapefiles -n 0.5e15 2.5e15 --name "TROPOMI" -o NO2_US_abs_TROPOMI.png
+python -m maps.nice_map ../GCHP_NO2_July2018.nc -v GCHP_NO2 --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region US --shapefiles /scratch1/Shared/Shapefiles -n 0.5e15 2.5e15 --cbar_only 8 0.5 --cbar_label "NO2 column, [molec cm-2]" -o NO2_US_abs_cbar.png
+
+python -m maps.nice_map ../GCHP_NO2_July2018.nc -v GCHP_NO2 --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region California --shapefiles /scratch1/Shared/Shapefiles -n 0.5e15 3.0e15 --name "GCHP" -o NO2_CA_abs_GCHP.png
+python -m maps.nice_map ../TROPOMI_NO2_July2018.nc -v TROPOMI_NO2_molec_per_cm2 --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region California --shapefiles /scratch1/Shared/Shapefiles -n 0.5e15 3.0e15 --name "TROPOMI" -o NO2_CA_abs_TROPOMI.png
+python -m maps.nice_map ../GCHP_NO2_July2018.nc -v GCHP_NO2 --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region California --shapefiles /scratch1/Shared/Shapefiles -n 0.5e15 3.0e15 --cbar_only 16 0.5 --cbar_label "NO2 column, [molec cm-2]" -o NO2_CA_abs_cbar.png
+
+cd ..
+source /opt/conda/bin/activate nco
+ncks -O -v 'TROPOMI_NO2_molec_per_cm2' TROPOMI_NO2_July2018.nc diffs.nc
+ncks -A -v 'GCHP_NO2' GCHP_NO2_July2018.nc diffs.nc
+ncap2 -O -s "NO2_rdiff=(GCHP_NO2-TROPOMI_NO2_molec_per_cm2)/TROPOMI_NO2_molec_per_cm2; NO2_adiff=(GCHP_NO2-TROPOMI_NO2_molec_per_cm2)" diffs.nc diffs.nc
+
+
+source /opt/conda/bin/activate py37
+export PYTHONPATH=/scratch1/liam.bindle/sg-TROPOMI/mapping
+
+python -m maps.nice_map diffs.nc -v NO2_rdiff -n -0.6 0.6 --cmap RdBu_r --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region US --shapefiles /scratch1/Shared/Shapefiles --name "(GCHP-TROPOMI)/TROPOMI" -o figures/NO2_rdiff.png
+python -m maps.nice_map diffs.nc -v NO2_rdiff -n -0.6 0.6 --cmap RdBu_r --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region US --shapefiles /scratch1/Shared/Shapefiles --name "(GCHP-TROPOMI)/TROPOMI" --cbar_only 8 0.5 -o figures/NO2_rdiff_cbar.png
+python -m maps.nice_map diffs.nc -v NO2_adiff -n -1000000000000000 1000000000000000 --cmap RdBu_r --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region US --shapefiles /scratch1/Shared/Shapefiles --name "GCHP-TROPOMI" -o figures/NO2_adiff.png
+python -m maps.nice_map diffs.nc -v NO2_adiff -n -1000000000000000 1000000000000000 --cmap RdBu_r --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region US --shapefiles /scratch1/Shared/Shapefiles --name "GCHP-TROPOMI" --cbar_only 8 0.5 --cbar_label 'kg m-2 s-1' -o figures/NO2_adiff_cbar.png
+
+python -m maps.nice_map diffs.nc -v NO2_rdiff -n -0.6 0.6 --cmap RdBu_r --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region California --shapefiles /scratch1/Shared/Shapefiles --name "(GCHP-TROPOMI)/TROPOMI" -o figures/NO2_CA_rdiff.png
+python -m maps.nice_map diffs.nc -v NO2_rdiff -n -0.6 0.6 --cmap RdBu_r --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region California --shapefiles /scratch1/Shared/Shapefiles --name "(GCHP-TROPOMI)/TROPOMI" --cbar_only 8 0.5 -o figures/NO2_CA_rdiff_cbar.png
+python -m maps.nice_map diffs.nc -v NO2_adiff -n -1000000000000000 1000000000000000 --cmap RdBu_r --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region California --shapefiles /scratch1/Shared/Shapefiles --name "GCHP-TROPOMI" -o figures/NO2_CA_adiff.png
+python -m maps.nice_map diffs.nc -v NO2_adiff -n -1000000000000000 1000000000000000 --cmap RdBu_r --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --region California --shapefiles /scratch1/Shared/Shapefiles --name "GCHP-TROPOMI" --cbar_only 8 0.5 --cbar_label 'kg m-2 s-1' -o figures/NO2_CA_adiff_cbar.png
+
+python -m maps.scatter --region US --xfile TROPOMI_NO2_July2018.nc --xvar TROPOMI_NO2_molec_per_cm2 --yfile GCHP_NO2_July2018.nc --yvar GCHP_NO2 --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --shapefiles /scratch1/Shared/Shapefiles --name "US" -o figures/US_scatter.png
+python -m maps.scatter --region California --xfile TROPOMI_NO2_July2018.nc --xvar TROPOMI_NO2_molec_per_cm2 --yfile GCHP_NO2_July2018.nc --yvar GCHP_NO2 --grid_def $TESSELLATIONS_PATH/${GRID_FILE}.nc --shapefiles /scratch1/Shared/Shapefiles --name "California" -o figures/CA_scatter.png
+
