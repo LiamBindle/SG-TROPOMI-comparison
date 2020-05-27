@@ -1,0 +1,11 @@
+#!/bin/bash
+
+source /opt/conda/bin/activate py37
+export PYTHONPATH=/scratch1/liam.bindle/sg-TROPOMI/mapping
+
+TESSELLATIONS_PATH=/scratch1/liam.bindle/sg-TROPOMI/GOOD_RUNS/tesselations
+
+GRID_FILE=$1
+
+python -m maps.CA_map GCHP_NO2_July2018.nc -v GCHP_NO2 --region California --grid_def ${TESSELLATIONS_PATH}/${GRID_FILE} --shapefiles /scratch1/Shared/Shapefiles -o figures/CA.png
+python -m maps.CA_map GCHP_NO2_July2018.nc -v GCHP_NO2 --region US --grid_def ${TESSELLATIONS_PATH}/${GRID_FILE} --shapefiles /scratch1/Shared/Shapefiles -o figures/US.png
