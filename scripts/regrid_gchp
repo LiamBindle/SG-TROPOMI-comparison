@@ -6,7 +6,7 @@ source /opt/conda/bin/activate py36
 export PYTHONPATH=/scratch1/liam.bindle/sg-ensemble-2/sg-restart-regridder/:/scratch1/gcpy
 
 for date in ${DATES[@]}; do
-    eval python -m sg.tropospheric_column --species GCHP.TROPOMI_Species.OVERPASS.${date}_1330z.nc4 --metc GCHP.TROPOMI_MetC.OVERPASS.${date}_1330z.nc4 --mete GCHP.TROPOMI_MetE.OVERPASS.${date}_1330z.nc4
+    eval python -m sg.tropospheric_column --species OutputDir/GCHP.TROPOMI_Species.OVERPASS.${date}_1330z.nc4 --metc OutputDir/GCHP.TROPOMI_MetC.OVERPASS.${date}_1330z.nc4 --mete OutputDir/GCHP.TROPOMI_MetE.OVERPASS.${date}_1330z.nc4
 done
 
 source /opt/conda/bin/activate py37

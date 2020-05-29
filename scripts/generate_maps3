@@ -7,3 +7,7 @@ TESSELLATIONS_PATH=/scratch1/liam.bindle/sg-TROPOMI/GOOD_RUNS/tesselations
 
 python -m maps.CA_map GCHP_NO2_July2018.nc -v GCHP_NO2 --region California --grid_def ${TESSELLATIONS_PATH}/comparison_grid.nc --shapefiles /scratch1/Shared/Shapefiles -o figures/CA.png
 python -m maps.CA_map GCHP_NO2_July2018.nc -v GCHP_NO2 --region US --grid_def ${TESSELLATIONS_PATH}/comparison_grid.nc --shapefiles /scratch1/Shared/Shapefiles -o figures/US.png
+
+python -m maps.masked_stats --xfile ../../test/TROPOMI_NO2_July2018.nc --xvar TROPOMI_NO2_molec_per_cm2 --yfile GCHP_NO2_July2018.nc --yvar GCHP_NO2 --grid_def ${TESSELLATIONS_PATH}/comparison_grid.nc --shapefiles /scratch1/Shared/Shapefiles -o figures/masked_stats.csv
+
+python -m maps.scatter --xfile ../../test/TROPOMI_NO2_July2018.nc --xvar TROPOMI_NO2_molec_per_cm2 --yfile GCHP_NO2_July2018.nc --yvar GCHP_NO2 --grid_def ${TESSELLATIONS_PATH}/comparison_grid.nc --shapefiles /scratch1/Shared/Shapefiles -o figures/masked_stats.csv
